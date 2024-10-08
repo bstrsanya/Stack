@@ -3,7 +3,6 @@
 #include <assert.h>
 
 #include "stack.h"
-#include "stack_func.h"
 
 int main()
 {
@@ -29,9 +28,11 @@ int main()
 
     StackDump (&stk, file_output, __FILE__, __LINE__);
 
-    int x = 0; StackPop (&stk, &x);
+    int x = 0; 
+    printf ("%s\n", StackErrDescr((error) StackPop (&stk, &x)));
 
-    int y = 0; StackPop (&stk, &y);
+    int y = 0;
+    printf ("%s\n", StackErrDescr((error) StackPop (&stk, &y)));
 
     StackDump (&stk, file_output, __FILE__, __LINE__);
 

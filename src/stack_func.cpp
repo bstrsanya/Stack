@@ -2,13 +2,26 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "stack_func.h"
+#include "stack.h"
 
 //#define StackASSERT(stk) StackAssertFunc(stk, __FILE__, __LINE__) 
 
 void StackCtor (stack_t *stk, int capacity)
 {
+    if (stk == NULL)
+    {
+        printf ("Pointer to the stack is NULL\n");
+        assert (0);
+    }
+
     stk->data = (StackElem_t*) calloc (capacity + 2, sizeof (StackElem_t)); // +2 для канареек
+
+    if (stk->data == NULL)
+    {
+        printf ("Pointer to the data is NULL\n");
+        assert (0);
+    }
+
     stk->capacity = capacity;
     stk->size = 0;
 
@@ -23,44 +36,39 @@ void StackPush (stack_t *stk, StackElem_t value)
 {
     StackASSERT (stk);
 
-    if ((stk->size) < (stk->capacity))
-        stk->data[stk->size++ + 1] = value; // +1 из-за левой канарейки
+    if ((stk->size) == (stk->capacity))
+        MyRealloc (stk, sizeof (StackElem_t), 2);
+    
+    stk->data[stk->size++ + 1] = value; // +1 из-за левой канарейки
 
-    else
-    {
-        stk->data = (StackElem_t*) realloc (stk->data, (stk->capacity) * 2 * sizeof (StackElem_t) + 2);
-        StackASSERT (stk);
-
-        stk->capacity *= 2;
-        stk->data[stk->capacity+1] = CANARY;
-        stk->data[stk->size++ + 1] = value; // убрать повторение строк, выдвинуть realloc вверх
-    }                                       // проверять указатель на стэк
     StackASSERT (stk);
 }
 
-void StackPop (stack_t *stk, StackElem_t *x)  // void -> int 
-{                                             // Myrealloc
+int StackPop (stack_t *stk, StackElem_t *x) 
+{                                           
     StackASSERT (stk);
+
     if (stk->size > 0)
     {
         *x = stk->data[stk->size];
         stk->data[stk->size] = 0;
         stk->size -= 1;
     }
-    if (stk->capacity > 2 * stk->size)
-    {
-        stk->data = (StackElem_t*) realloc (stk->data, (stk->capacity) * 0.5 * sizeof (StackElem_t) + 2);
-        StackASSERT (stk);
+    
+    else
+        return Stack_Is_Empty;
 
-        stk->capacity /= 2;
-        stk->data[stk->capacity+1] = CANARY;
-    }
+    if (stk->capacity > 2 * stk->size)
+        MyRealloc (stk, sizeof (StackElem_t), 0.5);
+
     StackASSERT (stk);
+    return Stack_Pop_Ok;
 }
 
 void StackDump (stack_t *stk, FILE *file_output, const char* name_file, const int n_str)
 {
     fprintf (file_output, "stack_t [%p] at %s:%d\n", stk, name_file, n_str);
+    //fprintf (file_output, "at %s:%d\n", stk->name_file, stk->n_str);
     fprintf (file_output, "size     = %d\n", stk->size);
     fprintf (file_output, "capacity = %d\n", stk->capacity);
     fprintf (file_output, "data [%p]:\n", stk->data);
@@ -92,16 +100,13 @@ void FreeStack (stack_t *stk)
     stk->capacity = 0;
 }
 
-int StackOK (stack_t *stk) // stk chek
+int StackOK (stack_t *stk)
 {
     if (stk == NULL)
-        return Stack_Pointer_Stk_NULL;
+        return Stack_Pointer_Struct_NULL;
 
     if (stk->capacity < stk->size) 
         return Stack_Little_Capacity;
-
-    if (stk == NULL) 
-        return Stack_Pointer_Struct_NULL;
 
     if (stk->data == NULL) 
         return Stack_Pointer_Data_NULL;
@@ -144,8 +149,30 @@ const char* StackErrDescr (error stack_error)
         ERROR (Stack_Size_Negative);
         ERROR (Stack_CanaryLeft_Wrong);
         ERROR (Stack_CanaryRight_Wrong);
-        ERROR (Stack_Pointer_Stk_NULL);
+        ERROR (Stack_Is_Empty);
+        ERROR (Stack_Pop_Ok);
     }
 
     #undef ERROR
+}
+
+void MyRealloc (stack_t *stk, size_t size_elem, double coef)
+{
+    StackASSERT (stk);
+
+    StackElem_t* new_pointer = (StackElem_t*) realloc (stk->data, (stk->capacity) * coef * sizeof (StackElem_t) + 2);
+    if (new_pointer == NULL)
+    {
+        printf ("Additional memory allocation error\n");
+        assert (0);
+    }
+
+    else
+    {
+        stk->data = new_pointer;
+        stk->capacity *= coef;
+        stk->data[stk->capacity + 1] = CANARY;
+    }
+
+    StackASSERT (stk);
 }

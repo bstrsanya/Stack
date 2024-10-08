@@ -8,6 +8,8 @@ struct stack_t
     StackElem_t* data;     // указатель на массив стэка
     size_t  size;          // последний элемент
     size_t  capacity;      // вместимость
+    // const char* name_file;
+    // const int n_str;
 };
 
 enum error
@@ -20,8 +22,19 @@ enum error
     CANARY                    = 2147483640,
     Stack_CanaryLeft_Wrong    = 106,
     Stack_CanaryRight_Wrong   = 107,
-    Stack_Pointer_Stk_NULL    = 108
+    Stack_Is_Empty            = 108,
+    Stack_Pop_Ok              = 109
 };
+
+void StackCtor (stack_t *stk, int capacity);
+void StackPush (stack_t *stk, StackElem_t value);
+int StackPop (stack_t *stk, StackElem_t *x);
+void StackDump (stack_t *stk, FILE *file_output, const char* file, const int n_str);
+void FreeStack (stack_t *stk);
+int StackOK (stack_t *stk);
+void StackASSERT (stack_t *stk);
+const char* StackErrDescr (error stack_error);
+void MyRealloc (stack_t *stk, size_t size_elem, double coef);
 
 
 #endif
