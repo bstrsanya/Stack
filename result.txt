@@ -1,50 +1,64 @@
-stack address - 0060FEF0
-elements address - 01042CF0
-stack capacity - 40
-stack occupancy - 21
-stack elements:
-index #0: value - 1
-index #1: value - 2
-index #2: value - 3
-index #3: value - 4
-index #4: value - 5
-index #5: value - 6
-index #6: value - 7
-index #7: value - 8
-index #8: value - 9
-index #9: value - 10
-index #10: value - 11
-index #11: value - 12
-index #12: value - 13
-index #13: value - 14
-index #14: value - 15
-index #15: value - 16
-index #16: value - 17
-index #17: value - 18
-index #18: value - 19
-index #19: value - 20
-index #20: value - 21
-index #21: value - 59067
-index #22: value - 17044584
-index #23: value - 17050768
-index #24: value - 0
-index #25: value - 0
-index #26: value - 0
-index #27: value - 0
-index #28: value - 0
-index #29: value - 0
-index #30: value - 0
-index #31: value - 0
-index #32: value - 0
-index #33: value - 0
-index #34: value - 0
-index #35: value - 0
-index #36: value - 0
-index #37: value - 0
-index #38: value - 0
-index #39: value - 0
-stack address - 0060FEF0
-elements address - 00000000
-stack capacity - 0
-stack occupancy - 0
-Pointer is NULL, because of this, the elements were not found
+stack_t [0064FEF0] at src/main.cpp:16
+size     = 0
+capacity = 10
+data [00E12D08]:
+{
+ CANARY_LEFT = 2147483640
+ [1] = 0
+ [2] = 0
+ [3] = 0
+ [4] = 0
+ [5] = 0
+ [6] = 0
+ [7] = 0
+ [8] = 0
+ [9] = 0
+ [10] = 0
+ CANARY_RIGHT = 2147483640
+}
+stack_t [0064FEF0] at src/main.cpp:30
+size     = 11
+capacity = 20
+data [00E11468]:
+{
+ CANARY_LEFT = 2147483640
+*[1] = 1
+*[2] = 2
+*[3] = 3
+*[4] = 4
+*[5] = 5
+*[6] = 6
+*[7] = 7
+*[8] = 8
+*[9] = 9
+*[10] = 10
+*[11] = 11
+ [12] = 1650226034
+ [13] = 829645153
+ [14] = 1886404956
+ [15] = 1635017028
+ [16] = 1668238428
+ [17] = 1297902689
+ [18] = 1869767529
+ [19] = 1952870259
+ [20] = 1852397404
+ CANARY_RIGHT = 2147483640
+}
+stack_t [0064FEF0] at src/main.cpp:36
+size     = 9
+capacity = 10
+data [00E11468]:
+{
+ CANARY_LEFT = 2147483640
+*[1] = 1
+*[2] = 2
+*[3] = 3
+*[4] = 4
+*[5] = 5
+*[6] = 6
+*[7] = 7
+*[8] = 8
+*[9] = 9
+ [10] = 0
+ CANARY_RIGHT = 2147483640
+}
