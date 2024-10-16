@@ -8,8 +8,6 @@ struct stack_t
     StackElem_t* data;     // указатель на массив стэка
     size_t  size;          // последний элемент
     size_t  capacity;      // вместимость
-    // const char* name_file;
-    // const int n_str;
 };
 
 enum error

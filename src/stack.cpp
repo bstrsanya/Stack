@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "stack.h"
+#include "./../include/stack.h"
 
 //#define StackASSERT(stk) StackAssertFunc(stk, __FILE__, __LINE__) 
 
@@ -11,6 +11,12 @@ void StackCtor (stack_t *stk, int capacity)
     if (stk == NULL)
     {
         printf ("Pointer to the stack is NULL\n");
+        assert (0);
+    }
+
+    if (capacity < 1)
+    {
+        printf ("Capasity is negative\n");
         assert (0);
     }
 
@@ -58,7 +64,7 @@ int StackPop (stack_t *stk, StackElem_t *x)
     else
         return Stack_Is_Empty;
 
-    if (stk->capacity > 2 * stk->size)
+    if (stk->capacity > 2 * stk->size && stk->capacity > 10)
         MyRealloc (stk, sizeof (StackElem_t), 0.5);
 
     StackASSERT (stk);
@@ -67,6 +73,12 @@ int StackPop (stack_t *stk, StackElem_t *x)
 
 void StackDump (stack_t *stk, FILE *file_output, const char* name_file, const int n_str)
 {
+    if (stk == NULL)
+    {
+        printf ("Pointer to the stack is NULL\n");
+        assert (0);
+    }
+
     fprintf (file_output, "stack_t [%p] at %s:%d\n", stk, name_file, n_str);
     //fprintf (file_output, "at %s:%d\n", stk->name_file, stk->n_str);
     fprintf (file_output, "size     = %d\n", stk->size);
