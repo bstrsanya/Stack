@@ -81,8 +81,8 @@ void StackDump (stack_t *stk, FILE *file_output, const char* name_file, const in
 
     fprintf (file_output, "stack_t [%p] at %s:%d\n", stk, name_file, n_str);
     //fprintf (file_output, "at %s:%d\n", stk->name_file, stk->n_str);
-    fprintf (file_output, "size     = %d\n", stk->size);
-    fprintf (file_output, "capacity = %d\n", stk->capacity);
+    fprintf (file_output, "size     = %lun", stk->size);
+    fprintf (file_output, "capacity = %lu\n", stk->capacity);
     fprintf (file_output, "data [%p]:\n", stk->data);
 
     if (stk->data == NULL) 
@@ -166,6 +166,7 @@ const char* StackErrDescr (error stack_error)
     }
 
     #undef ERROR
+    return "2";
 }
 
 void MyRealloc (stack_t *stk, size_t size_elem, double coef)
