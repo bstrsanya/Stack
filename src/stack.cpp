@@ -16,11 +16,11 @@ void StackCtor (stack_t *stk, int capacity)
 
     if (capacity < 1)
     {
-        printf ("Capasity is negative\n");
+        printf ("Capacity is negative\n");
         assert (0);
     }
 
-    stk->data = (StackElem_t*) calloc (capacity + 2, sizeof (StackElem_t)); // +2 для канареек
+    stk->data = (StackElem_t*) calloc ((size_t) capacity + 2, sizeof (StackElem_t)); // +2 для канареек
 
     if (stk->data == NULL)
     {
@@ -28,7 +28,7 @@ void StackCtor (stack_t *stk, int capacity)
         assert (0);
     }
 
-    stk->capacity = capacity;
+    stk->capacity = (size_t) capacity;
     stk->size = 0;
 
     // Установка канареек
@@ -42,8 +42,10 @@ void StackPush (stack_t *stk, StackElem_t value)
 {
     StackASSERT (stk);
 
-    if ((stk->size) == (stk->capacity))
-        MyRealloc (stk, sizeof (StackElem_t), 2);
+    if ((stk->size) == (stk->capacity)) {
+        //printf ("Now be realloc\n");
+        //Dump (stk, __FILE__, __LINE__);
+        MyRealloc (stk, 2); }
     
     stk->data[stk->size++ + 1] = value; // +1 из-за левой канарейки
 
@@ -64,8 +66,8 @@ int StackPop (stack_t *stk, StackElem_t *x)
     else
         return Stack_Is_Empty;
 
-    if (stk->capacity > 2 * stk->size && stk->capacity > 10)
-        MyRealloc (stk, sizeof (StackElem_t), 0.5);
+    if ((stk->capacity > 2 * stk->size) && (stk->capacity > 1))
+        MyRealloc (stk, 0.5);
 
     StackASSERT (stk);
     return Stack_Pop_Ok;
@@ -81,20 +83,19 @@ void StackDump (stack_t *stk, FILE *file_output, const char* name_file, const in
 
     fprintf (file_output, "stack_t [%p] at %s:%d\n", stk, name_file, n_str);
     //fprintf (file_output, "at %s:%d\n", stk->name_file, stk->n_str);
-    fprintf (file_output, "size     = %lun", stk->size);
+    fprintf (file_output, "size     = %lu\n", stk->size);
     fprintf (file_output, "capacity = %lu\n", stk->capacity);
     fprintf (file_output, "data [%p]:\n", stk->data);
 
     if (stk->data == NULL) 
         fprintf (file_output, "Pointer is NULL, because of this, the elements were not found\n");
-    
     else 
     {
         fprintf (file_output, "{\n");
         fprintf (file_output, " CANARY_LEFT = %d\n", stk->data[0]);
-        for (int i = 1; i < stk->capacity + 1; i++)
+        for (int i = 1; i < (int) stk->capacity + 1; i++)
         {
-            if (i < stk->size + 1)
+            if (i < (int) stk->size + 1)
                 fprintf (file_output, "*[%d] = %d\n", i, stk->data[i]);
             else
                 fprintf (file_output, " [%d] = %d\n", i, stk->data[i]);
@@ -163,29 +164,62 @@ const char* StackErrDescr (error stack_error)
         ERROR (Stack_CanaryRight_Wrong);
         ERROR (Stack_Is_Empty);
         ERROR (Stack_Pop_Ok);
+        ERROR (CANARY);
+        default: break;
     }
-
+    return "s";
     #undef ERROR
-    return "2";
 }
 
-void MyRealloc (stack_t *stk, size_t size_elem, double coef)
+void MyRealloc (stack_t *stk, double coef)
 {
     StackASSERT (stk);
-
-    StackElem_t* new_pointer = (StackElem_t*) realloc (stk->data, (stk->capacity) * coef * sizeof (StackElem_t) + 2);
+    StackElem_t* new_pointer = (StackElem_t*) realloc (stk->data, (size_t) ((int) stk->capacity * coef * sizeof (StackElem_t) + 2 * sizeof (StackElem_t)));
     if (new_pointer == NULL)
     {
         printf ("Additional memory allocation error\n");
+        free (stk->data); stk->data = NULL;
         assert (0);
     }
 
     else
     {
-        stk->data = new_pointer;
-        stk->capacity *= coef;
-        stk->data[stk->capacity + 1] = CANARY;
+        stk->data = new_pointer; //!!!
+        if ((int) coef == 2) stk->data[stk->capacity+1] = 0;
+        stk->capacity = (size_t) (((int) stk->capacity) * coef);
+        stk->data[stk->capacity + 1] = CANARY;      
+        StackASSERT (stk);
+    }
+}
+
+void Dump (stack_t *stk, const char* name_file, const int n_str)
+{
+    if (stk == NULL)
+    {
+        printf ("Pointer to the stack is NULL\n");
+        assert (0);
     }
 
-    StackASSERT (stk);
+    printf ("stack_t [%p] at %s:%d\n", stk, name_file, n_str);
+    //fprintf (file_output, "at %s:%d\n", stk->name_file, stk->n_str);
+    printf ("size     = %lu\n", stk->size);
+    printf ("capacity = %lu\n", stk->capacity);
+    printf ("data [%p]:\n", stk->data);
+
+    if (stk->data == NULL) 
+        printf ("Pointer is NULL, because of this, the elements were not found\n");
+    else 
+    {
+        printf ("{\n");
+        printf (" CANARY_LEFT = %d\n", stk->data[0]);
+        for (int i = 1; i < (int) stk->capacity + 1; i++)
+        {
+            if (i < (int) stk->size + 1)
+                printf ("*[%d] = %d\n", i, stk->data[i]);
+            else
+                printf (" [%d] = %d\n", i, stk->data[i]);
+        }
+        printf (" CANARY_RIGHT = %d\n", stk->data[stk->capacity + 1]);
+        printf ("}\n");
+    }
 }

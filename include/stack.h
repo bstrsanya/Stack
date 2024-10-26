@@ -32,7 +32,8 @@ void FreeStack (stack_t *stk);
 int StackOK (stack_t *stk);
 void StackASSERT (stack_t *stk);
 const char* StackErrDescr (error stack_error);
-void MyRealloc (stack_t *stk, size_t size_elem, double coef);
+void MyRealloc (stack_t *stk, double coef);
+void Dump (stack_t *stk, const char* name_file, const int n_str);
 
 
 #endif
