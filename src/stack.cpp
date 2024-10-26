@@ -123,11 +123,11 @@ int StackOK (stack_t *stk)
     if (stk->data == NULL) 
         return Stack_Pointer_Data_NULL;
 
-    if (stk->capacity < 0) 
-        return Stack_Capacity_Negative;  
+    // if (stk->capacity < 0) 
+    //     return Stack_Capacity_Negative;  
 
-    if (stk->size < 0) 
-        return Stack_Size_Negative;
+    // if (stk->size < 0) 
+    //     return Stack_Size_Negative;
 
     if (stk->data[0] != CANARY)
         return Stack_CanaryLeft_Wrong;
