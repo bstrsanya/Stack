@@ -92,15 +92,15 @@ void StackDump (stack_t *stk, FILE *file_output, const char* name_file, const in
     else 
     {
         fprintf (file_output, "{\n");
-        fprintf (file_output, " CANARY_LEFT = %d\n", stk->data[0]);
+        fprintf (file_output, " CANARY_LEFT = %lf\n", stk->data[0]);
         for (int i = 1; i < (int) stk->capacity + 1; i++)
         {
             if (i < (int) stk->size + 1)
-                fprintf (file_output, "*[%d] = %d\n", i, stk->data[i]);
+                fprintf (file_output, "*[%d] = %lf\n", i, stk->data[i]);
             else
-                fprintf (file_output, " [%d] = %d\n", i, stk->data[i]);
+                fprintf (file_output, " [%d] = %lf\n", i, stk->data[i]);
         }
-        fprintf (file_output, " CANARY_RIGHT = %d\n", stk->data[stk->capacity + 1]);
+        fprintf (file_output, " CANARY_RIGHT = %lf\n", stk->data[stk->capacity + 1]);
         fprintf (file_output, "}\n");
     }
 }
@@ -130,10 +130,10 @@ int StackOK (stack_t *stk)
     // if (stk->size < 0) 
     //     return Stack_Size_Negative;
 
-    if (stk->data[0] != CANARY)
+    if ((int) stk->data[0] != CANARY)
         return Stack_CanaryLeft_Wrong;
 
-    if (stk->data[stk->capacity + 1] != CANARY)
+    if ((int) stk->data[stk->capacity + 1] != CANARY)
         return Stack_CanaryRight_Wrong;
         
     return 0; 
@@ -211,15 +211,15 @@ void Dump (stack_t *stk, const char* name_file, const int n_str)
     else 
     {
         printf ("{\n");
-        printf (" CANARY_LEFT = %d\n", stk->data[0]);
+        printf (" CANARY_LEFT = %lf\n", stk->data[0]);
         for (int i = 1; i < (int) stk->capacity + 1; i++)
         {
             if (i < (int) stk->size + 1)
-                printf ("*[%d] = %d\n", i, stk->data[i]);
+                printf ("*[%d] = %lf\n", i, stk->data[i]);
             else
-                printf (" [%d] = %d\n", i, stk->data[i]);
+                printf (" [%d] = %lf\n", i, stk->data[i]);
         }
-        printf (" CANARY_RIGHT = %d\n", stk->data[stk->capacity + 1]);
+        printf (" CANARY_RIGHT = %lf\n", stk->data[stk->capacity + 1]);
         printf ("}\n");
     }
 }
