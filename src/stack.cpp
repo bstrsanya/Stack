@@ -32,8 +32,9 @@ void StackCtor (stack_t *stk, int capacity)
     stk->size = 0;
 
     // Установка канареек
+    DEBUG_ON (
     stk->data[0] = CANARY;
-    stk->data[capacity + 1] = CANARY;
+    stk->data[capacity + 1] = CANARY; )
 
     DEBUG_ON (StackASSERT (stk);)
 }
@@ -191,8 +192,9 @@ void MyRealloc (stack_t *stk, double coef)
         stk->data = new_pointer; //!!!
         if ((int) coef == 2) stk->data[stk->capacity+1] = 0;
         stk->capacity = (size_t) (((int) stk->capacity) * coef);
+        DEBUG_ON (
         stk->data[stk->capacity + 1] = CANARY;      
-        DEBUG_ON (StackASSERT (stk);)
+        StackASSERT (stk);)
     }
 }
 
