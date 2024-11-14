@@ -35,12 +35,12 @@ void StackCtor (stack_t *stk, int capacity)
     stk->data[0] = CANARY;
     stk->data[capacity + 1] = CANARY;
 
-    StackASSERT (stk);
+    DEBUG_ON (StackASSERT (stk);)
 }
 
 void StackPush (stack_t *stk, StackElem_t value)
 {
-    StackASSERT (stk);
+    DEBUG_ON (StackASSERT (stk);)
 
     if ((stk->size) == (stk->capacity)) {
         //printf ("Now be realloc\n");
@@ -49,12 +49,12 @@ void StackPush (stack_t *stk, StackElem_t value)
     
     stk->data[stk->size++ + 1] = value; // +1 из-за левой канарейки
 
-    StackASSERT (stk);
+    DEBUG_ON (StackASSERT (stk);)
 }
 
 int StackPop (stack_t *stk, StackElem_t *x) 
 {                                           
-    StackASSERT (stk);
+    DEBUG_ON (StackASSERT (stk);)
 
     if (stk->size > 0)
     {
@@ -69,10 +69,11 @@ int StackPop (stack_t *stk, StackElem_t *x)
     if ((stk->capacity > 2 * stk->size) && (stk->capacity > 1))
         MyRealloc (stk, 0.5);
 
-    StackASSERT (stk);
+    DEBUG_ON (StackASSERT (stk);)
     return Stack_Pop_Ok;
 }
 
+#ifdef DEBUG
 void StackDump (stack_t *stk, FILE *file_output, const char* name_file, const int n_str)
 {
     if (stk == NULL)
@@ -104,15 +105,17 @@ void StackDump (stack_t *stk, FILE *file_output, const char* name_file, const in
         fprintf (file_output, "}\n");
     }
 }
+#endif
 
 void FreeStack (stack_t *stk)
 {
-    StackASSERT (stk);
+    DEBUG_ON (StackASSERT (stk);)
     free (stk->data); stk->data = NULL;
     stk->size = 0;
     stk->capacity = 0;
 }
 
+#ifdef DEBUG
 int StackOK (stack_t *stk)
 {
     if (stk == NULL)
@@ -139,7 +142,7 @@ int StackOK (stack_t *stk)
     return 0; 
 }
 
-void StackASSERT (stack_t *stk) // сделать эту функцию в макрос (чтоб отключать)
+void StackASSERT (stack_t *stk) 
 {
     error stack_error = (error) StackOK (stk);
     if (stack_error != 0)
@@ -170,10 +173,11 @@ const char* StackErrDescr (error stack_error)
     return "s";
     #undef ERROR
 }
+#endif
 
 void MyRealloc (stack_t *stk, double coef)
 {
-    StackASSERT (stk);
+    DEBUG_ON (StackASSERT (stk);)
     StackElem_t* new_pointer = (StackElem_t*) realloc (stk->data, (size_t) ((int) stk->capacity * coef * sizeof (StackElem_t) + 2 * sizeof (StackElem_t)));
     if (new_pointer == NULL)
     {
@@ -188,10 +192,11 @@ void MyRealloc (stack_t *stk, double coef)
         if ((int) coef == 2) stk->data[stk->capacity+1] = 0;
         stk->capacity = (size_t) (((int) stk->capacity) * coef);
         stk->data[stk->capacity + 1] = CANARY;      
-        StackASSERT (stk);
+        DEBUG_ON (StackASSERT (stk);)
     }
 }
 
+#ifdef DEBUG
 void Dump (stack_t *stk, const char* name_file, const int n_str)
 {
     if (stk == NULL)
@@ -223,3 +228,4 @@ void Dump (stack_t *stk, const char* name_file, const int n_str)
         printf ("}\n");
     }
 }
+#endif

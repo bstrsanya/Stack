@@ -10,6 +10,14 @@ struct stack_t
     size_t  capacity;      // вместимость
 };
 
+// #define DEBUG
+
+#ifdef DEBUG
+#define DEBUG_ON(...) __VA_ARGS__
+#else
+#define DEBUG_ON(...) ;
+#endif
+
 enum error
 {
     Stack_Little_Capacity     = 101,
