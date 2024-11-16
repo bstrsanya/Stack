@@ -1,7 +1,14 @@
 #ifndef STACK_H
 #define STACK_H
 
+// #define TYPEDEF
+
+#ifdef TYPEDEF
+#include "Struct.h"
+#else
 typedef double StackElem_t;
+#endif
+
 
 struct stack_t
 {
